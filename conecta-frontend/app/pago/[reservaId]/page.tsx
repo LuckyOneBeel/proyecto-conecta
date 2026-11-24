@@ -29,6 +29,7 @@ function ContenidoPaginaPago() {
   const [procesando, setProcesando] = useState(false);
   const [tokenSimulado, setTokenSimulado] = useState<string | null>(null);
   const [mensaje, setMensaje] = useState<{ tipo: "exito" | "error"; texto: string } | null>(null);
+  const [recargar, setRecargar] = useState(0);
 
   const cerrarPorExpiracion = () => {
     localStorage.removeItem("token");
@@ -36,36 +37,57 @@ function ContenidoPaginaPago() {
     router.push("/login");
   };
 
-  const cargarDetalle = async () => {
+  useEffect(() => {
+    if (!reservaId) return;
+
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
       return;
     }
 
-    try {
-      const res = await fetch(`http://localhost:3001/api/pagos/reserva/${reservaId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    let activo = true;
 
-      if (res.status === 401) return cerrarPorExpiracion();
+    const obtenerDetalle = async () => {
+      try {
+        const res = await fetch(`http://localhost:3001/api/pagos/reserva/${reservaId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      const data = await res.json();
-      if (res.ok) {
-        setDetalle(data);
-      } else {
-        setMensaje({ tipo: "error", texto: data.error || "No se pudo cargar la reserva." });
+        if (!activo) return;
+
+        if (res.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("usuario");
+          router.push("/login");
+          return;
+        }
+
+        const data = await res.json();
+        if (!activo) return;
+
+        if (res.ok) {
+          setDetalle(data);
+        } else {
+          setMensaje({ tipo: "error", texto: data.error || "No se pudo cargar la reserva." });
+        }
+      } catch {
+        if (activo) {
+          setMensaje({ tipo: "error", texto: "Error de conexión con el servidor." });
+        }
+      } finally {
+        if (activo) {
+          setCargando(false);
+        }
       }
-    } catch (error) {
-      setMensaje({ tipo: "error", texto: "Error de conexión con el servidor." });
-    } finally {
-      setCargando(false);
-    }
-  };
+    };
 
-  useEffect(() => {
-    if (reservaId) cargarDetalle();
-  }, [reservaId]);
+    obtenerDetalle();
+
+    return () => {
+      activo = false;
+    };
+  }, [reservaId, router, recargar]);
 
   const iniciarPagoFlow = async () => {
     const token = localStorage.getItem("token");
@@ -129,7 +151,7 @@ function ContenidoPaginaPago() {
           tipo: resultado === "pagado" ? "exito" : "error",
           texto: data.mensaje,
         });
-        await cargarDetalle();
+        setRecargar((prev) => prev + 1);
       } else {
         setMensaje({ tipo: "error", texto: data.error || "No se pudo confirmar el pago." });
       }

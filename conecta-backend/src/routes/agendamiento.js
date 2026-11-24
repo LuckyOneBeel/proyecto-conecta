@@ -180,4 +180,68 @@ router.patch('/disponibilidad/:id/estado', authMiddleware, async (req, res) => {
   }
 });
 
+// 6. Obtener las clases agendadas del usuario autenticado (Estudiante o Tutor)
+router.get('/mis-reservas', authMiddleware, async (req, res) => {
+  try {
+    if (req.usuario.rol === 'estudiante') {
+      const consulta = `
+        SELECT
+          r.id AS reserva_id,
+          r.estado AS estado_reserva,
+          d.fecha,
+          d.hora_inicio,
+          d.hora_fin,
+          u_tut.nombre AS contraparte_nombre,
+          t.especialidad,
+          t.tarifa_hora,
+          p.estado AS estado_pago,
+          p.monto_total
+        FROM Reservas r
+        INNER JOIN Tutores t ON r.tutor_id = t.id
+        INNER JOIN Usuarios u_tut ON t.usuario_id = u_tut.id
+        INNER JOIN Disponibilidad d ON r.disponibilidad_id = d.id
+        LEFT JOIN Pagos p ON p.reserva_id = r.id
+        WHERE r.estudiante_id = $1
+        ORDER BY d.fecha DESC, d.hora_inicio DESC
+      `;
+      const resultado = await pool.query(consulta, [req.usuario.id]);
+      return res.json(resultado.rows);
+    }
+
+    if (req.usuario.rol === 'tutor') {
+      const tutorRes = await pool.query('SELECT id FROM Tutores WHERE usuario_id = $1', [req.usuario.id]);
+      if (tutorRes.rows.length === 0) {
+        return res.json([]);
+      }
+
+      const consulta = `
+        SELECT
+          r.id AS reserva_id,
+          r.estado AS estado_reserva,
+          d.fecha,
+          d.hora_inicio,
+          d.hora_fin,
+          u_est.nombre AS contraparte_nombre,
+          t.especialidad,
+          t.tarifa_hora,
+          p.estado AS estado_pago,
+          p.monto_total
+        FROM Reservas r
+        INNER JOIN Tutores t ON r.tutor_id = t.id
+        INNER JOIN Usuarios u_est ON r.estudiante_id = u_est.id
+        INNER JOIN Disponibilidad d ON r.disponibilidad_id = d.id
+        LEFT JOIN Pagos p ON p.reserva_id = r.id
+        WHERE r.tutor_id = $1
+        ORDER BY d.fecha DESC, d.hora_inicio DESC
+      `;
+      const resultado = await pool.query(consulta, [tutorRes.rows[0].id]);
+      return res.json(resultado.rows);
+    }
+
+    res.json([]);
+  } catch (error) {
+    console.error('Error al obtener mis reservas:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
 module.exports = router;
