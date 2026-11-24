@@ -29,16 +29,19 @@ app.get('/test-db', async (req, res) => {
 // Middlewares
 app.use(cors());
 app.use(express.json()); // Permite recibir datos en formato JSON desde el frontend
+app.use(express.urlencoded({ extended: true }));
 
 // Importar rutas
 const authRoutes = require('./src/routes/auth');
 const usuariosRoutes = require('./src/routes/usuarios');
 const tutoresRoutes = require('./src/routes/tutores');
 const agendamientoRoutes = require('./src/routes/agendamiento');
+const pagosRoutes = require('./src/routes/pagos');
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/auth', authRoutes); // Todas las rutas de auth empezarán con /api/auth
 app.use('/api/tutores', tutoresRoutes);
 app.use('/api/agendamiento', agendamientoRoutes);
+app.use('/api/pagos', pagosRoutes); // NUEVO
 
 // Ruta principal
 app.get('/', (req, res) => {

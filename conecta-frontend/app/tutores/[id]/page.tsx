@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ interface BloqueHorario {
   estado: string;
 }
 
-export default function HorariosTutor() {
+function ContenidoHorariosTutor() {
   const params = useParams();
   const router = useRouter();
   const tutorId = params.id;
@@ -103,10 +103,12 @@ export default function HorariosTutor() {
       if (res.ok) {
         setMensaje({
           tipo: "exito",
-          texto: `Reserva #${data.reserva.id} creada con éxito. El horario quedó bloqueado en espera de pago.`,
+          texto: `Reserva #${data.reserva.id} creada. Redirigiendo a la pasarela de pago...`,
         });
-        // Quitamos el bloque recién reservado de la lista visible
         setHorarios((prev) => prev.filter((h) => h.id !== disponibilidadId));
+        setTimeout(() => {
+          router.push(`/pago/${data.reserva.id}`);
+        }, 1200);
       } else {
         if (res.status === 401 || data.error?.includes("Token")) {
           localStorage.removeItem("token");
@@ -236,5 +238,18 @@ export default function HorariosTutor() {
         </div>
       </div>
     </main>
+  );
+}
+export default function HorariosTutor() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <p className="text-xl text-gray-700">Cargando horarios del tutor...</p>
+        </main>
+      }
+    >
+      <ContenidoHorariosTutor />
+    </Suspense>
   );
 }
