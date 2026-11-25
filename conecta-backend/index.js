@@ -37,11 +37,13 @@ const usuariosRoutes = require('./src/routes/usuarios');
 const tutoresRoutes = require('./src/routes/tutores');
 const agendamientoRoutes = require('./src/routes/agendamiento');
 const pagosRoutes = require('./src/routes/pagos');
+const aulaRoutes = require('./src/routes/aula'); // NUEVO
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/auth', authRoutes); // Todas las rutas de auth empezarán con /api/auth
 app.use('/api/tutores', tutoresRoutes);
 app.use('/api/agendamiento', agendamientoRoutes);
-app.use('/api/pagos', pagosRoutes); // NUEVO
+app.use('/api/pagos', pagosRoutes); 
+app.use('/api/aula', aulaRoutes); // NUEVO
 
 // Ruta principal
 app.get('/', (req, res) => {

@@ -262,13 +262,23 @@ export default function Perfil() {
                             </Link>
                           )}
 
-                          {usuario?.rol === "estudiante" && clase.estado_reserva === "confirmada" && (
-                            <Link
-                              href={`/pago/${clase.reserva_id}`}
-                              className="text-sm font-semibold text-green-700 hover:underline"
-                            >
-                              Ver comprobante
-                            </Link>
+                          {clase.estado_reserva === "confirmada" && (
+                            <div className="flex flex-col sm:items-end gap-1.5">
+                              <Link
+                                href={`/aula/${clase.reserva_id}`}
+                                className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors text-center"
+                              >
+                                Entrar al Aula Virtual
+                              </Link>
+                              {usuario?.rol === "estudiante" && (
+                                <Link
+                                  href={`/pago/${clase.reserva_id}`}
+                                  className="text-xs font-semibold text-gray-600 hover:underline"
+                                >
+                                  Ver comprobante
+                                </Link>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
