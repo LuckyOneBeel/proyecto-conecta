@@ -156,14 +156,14 @@ export default function Perfil() {
                   <h2 className="text-xl font-bold text-gray-900 border-b pb-2 mb-4">
                     Herramientas de Tutor
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Link
                       href="/tutor/gestion"
                       className="block bg-blue-50 hover:bg-blue-100 border border-blue-200 p-5 rounded-xl transition-colors"
                     >
                       <p className="text-lg font-bold text-blue-800">Perfil y Horarios</p>
                       <p className="text-sm text-blue-700 mt-1">
-                        Edita tu especialidad, tarifa por hora y bloques disponibles.
+                        Especialidad, tarifa por hora y bloques libres.
                       </p>
                     </Link>
 
@@ -173,10 +173,39 @@ export default function Perfil() {
                     >
                       <p className="text-lg font-bold text-green-800">Panel Financiero</p>
                       <p className="text-sm text-green-700 mt-1">
-                        Revisa tus ingresos brutos, comisiones y ganancia neta.
+                        Ingresos brutos, comisiones y ganancia neta.
+                      </p>
+                    </Link>
+
+                    <Link
+                      href="/tutor/kyc"
+                      className="block bg-amber-50 hover:bg-amber-100 border border-amber-200 p-5 rounded-xl transition-colors"
+                    >
+                      <p className="text-lg font-bold text-amber-900">Validación KYC</p>
+                      <p className="text-sm text-amber-800 mt-1">
+                        Acredita tu identidad para obtener el sello verificado.
                       </p>
                     </Link>
                   </div>
+                </section>
+              )}
+
+              {usuario?.rol === "admin" && (
+                <section>
+                  <h2 className="text-xl font-bold text-gray-900 border-b pb-2 mb-4">
+                    Administración de Plataforma
+                  </h2>
+                  <Link
+                    href="/admin"
+                    className="block bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 p-5 rounded-xl transition-colors"
+                  >
+                    <p className="text-lg font-bold text-indigo-900">
+                      Ir al Panel de Administración y Validación KYC
+                    </p>
+                    <p className="text-sm text-indigo-800 mt-1">
+                      Revisa solicitudes pendientes de tutores y métricas globales de CONECTA.
+                    </p>
+                  </Link>
                 </section>
               )}
 
