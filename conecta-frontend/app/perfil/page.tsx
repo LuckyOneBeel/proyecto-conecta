@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface Usuario {
   id: number;
@@ -44,10 +45,10 @@ export default function Perfil() {
     const cargarPerfilYClases = async () => {
       try {
         const [resPerfil, resReservas] = await Promise.all([
-          fetch("http://localhost:3001/api/usuarios/perfil", {
+          fetch(`${API_URL}/api/usuarios/perfil`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3001/api/agendamiento/mis-reservas", {
+          fetch(`${API_URL}/api/agendamiento/mis-reservas`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface Tutor {
   usuario_id: number;
@@ -20,7 +21,7 @@ export default function Catalogo() {
   useEffect(() => {
     const obtenerTutores = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/tutores");
+        const res = await fetch(`${API_URL}/api/tutores`);
         if (res.ok) {
           const data = await res.json();
           setTutores(data);

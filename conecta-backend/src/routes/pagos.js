@@ -117,7 +117,7 @@ router.post('/crear-orden', authMiddleware, async (req, res) => {
         amount: montoTotal,
         email: reserva.email_estudiante,
         urlConfirmation: `${process.env.BACKEND_URL}/api/pagos/webhook-flow`,
-        urlReturn: `${process.env.FRONTEND_URL}/pago/${reserva.id}`,
+        urlReturn: `${process.env.BACKEND_URL || 'http://localhost:3001'}/api/pagos/retorno-flow/${reserva_id}`,
       };
 
       params.s = firmarParametrosFlow(params, process.env.FLOW_SECRET_KEY);
@@ -347,6 +347,12 @@ router.get('/resumen-tutor', authMiddleware, async (req, res) => {
     console.error('Error al obtener resumen financiero:', error);
     res.status(500).json({ error: 'Error interno del servidor.' });
   }
+});
+// Ruta puente: recibe el POST de retorno de Flow y redirige por GET a Next.js (evita error 405)
+router.all('/retorno-flow/:reservaId', (req, res) => {
+  const { reservaId } = req.params;
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  res.redirect(303, `${frontendUrl}/pago/${reservaId}?retorno=flow`);
 });
 
 module.exports = router;

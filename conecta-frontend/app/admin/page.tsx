@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface SolicitudTutor {
   tutor_id: number;
@@ -18,6 +19,7 @@ interface SolicitudTutor {
   url_documento: string | null;
   observacion_kyc: string | null;
   fecha_solicitud_kyc: string | null;
+  sumsub_veredicto: string | null;
 }
 
 interface KpisAdmin {
@@ -58,7 +60,7 @@ export default function PanelAdmin() {
 
     const cargarPanel = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/kyc/admin/solicitudes", {
+        const res = await fetch(`${API_URL}/api/kyc/admin/solicitudes`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -265,6 +267,17 @@ export default function PanelAdmin() {
                         >
                           {tutor.estado_kyc.replace("_", " ")}
                         </span>
+                        {tutor.sumsub_veredicto && (
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                              tutor.sumsub_veredicto === "GREEN"
+                                ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                                : "bg-red-100 text-red-800 border border-red-200"
+                            }`}
+                          >
+                            Sumsub: {tutor.sumsub_veredicto}
+                          </span>
+                        )}
                       </div>
                       <p className="text-sm text-gray-700">
                         {tutor.email} · <strong>RUT:</strong> {tutor.rut || "No ingresado"}

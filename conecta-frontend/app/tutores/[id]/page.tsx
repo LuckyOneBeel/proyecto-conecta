@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface Tutor {
   usuario_id: number;
@@ -38,8 +39,8 @@ function ContenidoHorariosTutor() {
     const cargarDatos = async () => {
       try {
         const [resTutor, resHorarios] = await Promise.all([
-          fetch(`http://localhost:3001/api/tutores/${tutorId}`),
-          fetch(`http://localhost:3001/api/agendamiento/disponibilidad/${tutorId}`),
+          fetch(`${API_URL}/api/tutores/${tutorId}`),
+          fetch(`${API_URL}/api/agendamiento/disponibilidad/${tutorId}`),
         ]);
 
         if (resTutor.ok) {

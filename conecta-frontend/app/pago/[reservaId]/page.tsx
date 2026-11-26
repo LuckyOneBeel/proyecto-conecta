@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface DetallePago {
   reserva_id: number;
@@ -50,7 +51,7 @@ function ContenidoPaginaPago() {
 
     const obtenerDetalle = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/pagos/reserva/${reservaId}`, {
+        const res = await fetch(`${API_URL}/api/pagos/reserva/${reservaId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface Movimiento {
   pago_id: number;
@@ -53,7 +54,7 @@ export default function FinanzasTutor() {
 
     const obtenerResumen = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/pagos/resumen-tutor", {
+        const res = await fetch(`${API_URL}/api/pagos/resumen-tutor`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/app/lib/api";
 
 export default function Login() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function Login() {
     setMensaje("Verificando credenciales...");
 
     try {
-      const res = await fetch("http://localhost:3001/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,6 +39,7 @@ export default function Login() {
         // Guardamos el token en el almacenamiento local del navegador
         localStorage.setItem("token", data.token);
         localStorage.setItem("usuario", JSON.stringify(data.usuario));
+        window.dispatchEvent(new Event("conecta-auth"));
         
         // Redirigir al usuario al catálogo principal después de un momento
         setTimeout(() => {

@@ -9,6 +9,7 @@ import type {
   ICameraVideoTrack,
   IMicrophoneAudioTrack,
 } from "agora-rtc-sdk-ng";
+import { API_URL } from "@/app/lib/api";
 
 interface DatosAccesoAula {
   clase: {
@@ -98,7 +99,7 @@ function ContenidoAulaVirtual() {
 
     const validarAcceso = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/aula/acceso/${reservaId}`, {
+        const res = await fetch(`${API_URL}/api/aula/acceso/${reservaId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

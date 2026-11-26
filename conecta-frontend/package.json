@@ -9,8 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@sumsub/websdk": "^2.10.1",
     "agora-rtc-sdk-ng": "^4.24.10",
-    "next": "16.4.0",
+    "next": "^16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },

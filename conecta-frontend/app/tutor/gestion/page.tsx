@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/app/lib/api";
 
 interface BloqueHorario {
   id: number;
@@ -51,10 +52,10 @@ export default function GestionTutor() {
     const cargarDatos = async () => {
       try {
         const [resPerfil, resHorarios] = await Promise.all([
-          fetch("http://localhost:3001/api/tutores/mi-perfil", {
+          fetch(`${API_URL}/api/tutores/mi-perfil`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:3001/api/agendamiento/mis-horarios", {
+          fetch(`${API_URL}/api/agendamiento/mis-horarios`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

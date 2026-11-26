@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { API_URL } from "@/app/lib/api";
 
 export default function Registro() {
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ export default function Registro() {
     setMensaje("Cargando...");
 
     try {
-      const res = await fetch("http://localhost:3001/api/auth/registro", {
+      const res = await fetch(`${API_URL}/api/auth/registro`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
